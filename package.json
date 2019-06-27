@@ -1,0 +1,28 @@
+{
+  "name": "bial-poc",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "bootstrap": "3.4.1",
+    "cookie-parser": "1.4.3",
+    "express": "4.16.3",
+    "express-session": "1.15.6",
+    "forge-apis": "0.4.3",
+    "jquery": "^3.4.1",
+    "jstree": "3.3.7",
+    "moment": "2.22.2",
+    "request": "^2.81.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node start.js",
+    "dev": "node start.js",
+    "nodemon": "nodemon start.js --ignore www/"
+  },
+  "author": "(Forge Partner Development)",
+  "license": "MIT"
+}
