@@ -1,3 +1,4 @@
+
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
 // Written by Forge Partner Development
@@ -39,7 +40,8 @@ $(document).ready(function () {
 
 var haveBIM360Hub = false;
 var previousUrn = 0;
-
+var baseurn = '';
+var urns = [];
 function prepareDataManagementTree() {
   $('#dataManagementHubs').jstree({
     'core': {
@@ -68,7 +70,7 @@ function prepareDataManagementTree() {
     },
     'checkbox' : {
       'tie_selection': false,
-      "three_state": true,
+      "three_state": false,
       'whole_node': false
     },
     'types': {
@@ -113,19 +115,37 @@ function prepareDataManagementTree() {
     if (data.node.type == 'versions') {
       if (data.node.id === 'not_available') { alert('No viewable available for this version'); return; }
 
-      var urn = data.node.id;
+      baseurn  = data.node.id;
       var filename = $('#dataManagementHubs').jstree(true).get_node(data.node.parent).text;
       var fileType = data.node.original.fileType;
 
-      if (fileType == null || urn == null || previousUrn == urn) return;
-      launchViewer(urn, filename, fileType);
-      previousUrn = urn;
+      if (fileType == null || baseurn == null || previousUrn == baseurn) return;
+      launchViewer(baseurn, filename, fileType);
+      previousUrn = baseurn;
       $.notify("loading... " + filename, { className: "info", position:"bottom right" });
     }
-  }).bind("check_node.jstree uncheck_node.jstree", function (evt, data) {
+  }).bind("check_node.jstree", function (evt, data) {
     console.log('check_node.jstree')
       console.log(data)
       var urn = data.node.id;
+      urns.push(urn)
       loadMultipleURN(urn)
+  }).bind("uncheck_node.jstree", function (evt, data) {
+    launchViewer(baseurn)
+    console.log('check_node.jstree')
+      console.log(data)
+      var urn = data.node.id;
+      for( var i = 0; i < urns.length; i++){ 
+        if ( urns[i] === urn) {
+          urns.splice(i, 1); 
+        }
+      }
+      for( var i = 0; i < urns.length; i++){ 
+        var timer = 100;
+        if (i !== 0) {
+          timer = timer*i
+        }
+        window.setTimeout(e => loadMultipleURN(urn[i]), timer); 
+      }
   });
 }
